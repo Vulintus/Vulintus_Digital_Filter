@@ -24,7 +24,7 @@ const Vulintus_Filter_Type FILTER_TYPE = LOWPASS;               // Shorthand for
 // const Vulintus_Filter_Type FILTER_TYPE = INTEGRATOR;            // Trapezoidal integrator.
 // const Vulintus_Filter_Type FILTER_TYPE = DIFFERENTIATOR;        // Difference quotient differentiator.
 float cutoff_freq = 2.0;                                        // Cutoff frequency of the filter, in Hz
-Vulintus_Digital_Filter test_filter(FILTER_TYPE, cutoff_freq);  // Creae a low-pass filter with a cutoff frequency of 1 Hz.
+Vulintus_Digital_Filter test_filter(FILTER_TYPE, cutoff_freq);  // Creae a low-pass filter.
 
 // Sampling and print timing. //
 const float SAMPLE_FREQ = 1000;         // Sampling frequency, in Hz.
