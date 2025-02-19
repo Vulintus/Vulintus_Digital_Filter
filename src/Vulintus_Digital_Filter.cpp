@@ -56,15 +56,22 @@ float Vulintus_Digital_Filter::cutoff_frequency(float new_freq)
 }
 
 
-// Update the filter with a new input value.
+// Update the filter with a new input value, using the current micros() time.
 float Vulintus_Digital_Filter::input(float new_value)
 {
-    uint32_t cur_micros = micros();                     // Grab the current microsecond clock time.
-    uint32_t dt = cur_micros - _last_micros;            // Calculate the time since last update.
-    _last_micros = cur_micros;                          // Update the last update time.
+    uint32_t read_time = micros();                      // Grab the current microsecond clock time.
+    return input(new_value, read_time);                 // Update the filter with the new value.
+}        
+
+
+// Update the filter with a new input value, using the specified micros() time.
+float input(float new_value, uint32_t read_time)
+{
+    uint32_t dt = read_time - _last_micros;             // Calculate the time since last update.
+    _last_micros = read_time;                           // Update the last update time.
 
     _Y[1] = _Y[0];                                      // Shift the current output value to the previous.
-    last_input = new_value;                                     // Update the input value.
+    last_input = new_value;                             // Update the input value.
 
     uint32_t tau_samples = _tau_micros / dt;            // Calculate the decay constant in samples.
 
@@ -78,9 +85,7 @@ float Vulintus_Digital_Filter::input(float new_value)
     _Y[0] = (1.0-amp_factor)*last_input + amp_factor*_Y[1];     // Calculate the new output value.
 
     return output();                                    // Return the current output value.
-
-}        
-
+}      
 
 // Return the current output value of the filter.
 float Vulintus_Digital_Filter::output(void)
