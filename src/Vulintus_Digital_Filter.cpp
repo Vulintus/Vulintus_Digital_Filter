@@ -14,11 +14,11 @@
 // CLASS PUBLIC FUNCTIONS ****************************************************// 
 
 // Constructor. //
-Vulintus_Digital_Filter::Vulintus_Digital_Filter(One_Pole_Filter_Type type, \
+Vulintus_Digital_Filter::Vulintus_Digital_Filter(Vulintus_Filter_Type filter_type, \
         float freq, float initial_value)
-    : _filter_type(type), _cutoff_freq(freq)
+    : _filter_type(filter_type), _cutoff_freq(freq)
 {
-    _X = initial_value;             // Set the initial input value.
+    last_input = initial_value;     // Set the initial input value.
     _Y[0] = initial_value;          // Set the initial output value.
     _Y[1] = initial_value;          // Set the previous output value.
 }
@@ -64,7 +64,7 @@ float Vulintus_Digital_Filter::update(float new_value)
     _last_micros = cur_micros;                          // Update the last update time.
 
     _Y[1] = _Y[0];                                      // Shift the current output value to the previous.
-    _X = new_value;                                     // Update the input value.
+    last_input = new_value;                                     // Update the input value.
 
     uint32_t tau_samples = _tau_micros / dt;            // Calculate the decay constant in samples.
 
@@ -75,7 +75,7 @@ float Vulintus_Digital_Filter::update(float new_value)
         amp_factor = exp(-1.0/tau_samples);             // This equals 1 if called quickly.
     #endif
 
-    _Y[0] = (1.0-amp_factor)*_X + amp_factor*_Y[1];     // Calculate the new output value.
+    _Y[0] = (1.0-amp_factor)*last_input + amp_factor*_Y[1];     // Calculate the new output value.
 
     return output();                                    // Return the current output value.
 
@@ -85,14 +85,29 @@ float Vulintus_Digital_Filter::update(float new_value)
 // Return the current output value of the filter.
 float Vulintus_Digital_Filter::output(void)
 {
-    switch (_filter_type) {                             // Switch between the different filter types.
-        case HIGHPASS_FILTER:                           // High-pass filter.
-            return _X - _Y[0];                          // The output is the difference.
-        case LOWPASS_FILTER:                            // Low-pass filter.
-            return _Y[0];                               // The output is the last value.
-        case INTEGRATOR_FILTER:                         // Trapezoidal integrator.
-            return _Y[0]*_tau_micros/1.0e6;             // Same output as low-pass filter, but normalized.
-        case DIFFERENTIATOR_FILTER:                     // Difference quotient differentiator.
-            return (_X - _Y[0])/(_tau_micros/1.0e6);    // Same output as high-pass filter, but normalized.
+    float output_val;                           // Output value to return.
+    switch (_filter_type) {                     // Switch between the different filter types.
+
+        case SINGLE_POLE_HIGHPASS:              // High-pass filter.
+            output_val = last_input - _Y[0];    // The output is the difference.
+            break;
+
+        case SINGLE_POLE_LOWPASS:               // Low-pass filter.
+            output_val = _Y[0];                 // The output is the last value.
+            break;
+
+        case INTEGRATOR:                        // Trapezoidal integrator.
+            output_val = _Y[0];                 // Same output as low-pass filter...
+            output_val *= _tau_micros;          // ...but normalized.
+            output_val *= 1.0e6;                // Convert the timescale back to seconds.
+            break;
+            
+        case DIFFERENTIATOR:                    // Difference quotient differentiator.
+            output_val = last_input - _Y[0];    // Same output as high-pass filter...
+            output_val /= _tau_micros;          // ...but normalized.
+            output_val *= 1.0e6;                // Convert the timescale back to seconds.
+            break;
+
     }
+    return output_val;                          // Return the output value.
 }  

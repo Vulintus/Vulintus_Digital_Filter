@@ -23,25 +23,31 @@
 // DEFINITIONS *******************************************************************************************************//
 
 // Filter types. //
-enum Vulintus_Filter_Type {
-  SINGLE_POLE_HIGHPASS,   // Single-pole high-pass filter.
-  SINGLE_POLE_LOWPASS,    // Single-pole low-pass filter.
-  INTEGRATOR,             // Trapezoidal integrator.
-  DIFFERENTIATOR          // Difference quotient differentiator.
+enum Vulintus_Filter_Type : uint8_t {
+  SINGLE_POLE_HIGHPASS = 0x00,   // Single-pole high-pass filter.
+  SINGLE_POLE_LOWPASS = 0x01,    // Single-pole low-pass filter.
+  INTEGRATOR = 0x02,             // Trapezoidal integrator.
+  DIFFERENTIATOR = 0x03,         // Difference quotient differentiator.
 };
+
+#define HIGHPASS SINGLE_POLE_HIGHPASS   // Set "HIGHPASS" as shorthand for "SINGLE_POLE_HIGHPASS".
+#define LOWPASS SINGLE_POLE_LOWPASS     // Set "LOWPASS" as shorthand for "SINGLE_POLE_LOWPASS".
 
 
 //CLASSES ************************************************************************************************************//
-case Vulintus_Digital_Filter {
+class Vulintus_Digital_Filter {
 
   public:
 
       // Constructor. //
-      Vulintus_Digital_Filter(One_Pole_Filter_Type type = LOWPASS_FILTER, \
+      Vulintus_Digital_Filter(Vulintus_Filter_Type filter_type = SINGLE_POLE_HIGHPASS, \
           float freq = 1.0, float initial_value = 0);
       
       // Destructor. //
       ~Vulintus_Digital_Filter();
+      
+      // Public Variables. //
+      float last_input;                       // Last input value.
 
       // Public Functions. //
       void begin();                           // Initialization.
@@ -56,13 +62,12 @@ case Vulintus_Digital_Filter {
   private:
 
       // Private Variables. //
-      One_Pole_Filter_Type _filter_type;      // Single-pole filter type.
+      Vulintus_Filter_Type _filter_type;      // Single-pole filter type.
       float _cutoff_freq;                     // Cutoff frequency of the filter.
-      float _X;                               // Most recent input value.
       float _Y[2];                            // Current and previos output value.
       float _tau_micros;                      // Decay constant of the filter, in microseconds.
       uint32_t _last_micros;                  // Time of last update, in microseconds.
 
-}
+};
 
 #endif	//#ifndef _VULINTUS_DIGITAL_FILTER_H_
