@@ -55,7 +55,7 @@ class Vulintus_Digital_Filter {
       float cutoff_frequency(void);           // Get the cutoff frequency of the filter.
       float cutoff_frequency(float new_freq); // Set the cutoff frequency of the filter.
       
-      float update(float new_value);          // Update the filter with a new input value.
+      float input(float new_value);           // Update the filter with a new input value.
       float output(void);                     // Return the current output value of the filter.
       
 

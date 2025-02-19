@@ -84,9 +84,9 @@ void loop() {
     // On each scheduled sample, update the filter with the test signal.
     if (micros() > next_sample) {                   // If it's time to sample the test signal...
         if (test_phase) {                           // If the test signal is in the positive phase.
-            test_filter.update(TEST_AMPLITUDE);     // Update the filter with the positive amplitude.
+            test_filter.input(TEST_AMPLITUDE);      // Update the filter with the positive amplitude.
         } else {                                    // If the test signal is in the negative phase.
-            test_filter.update(-TEST_AMPLITUDE);    // Update the filter with the negative amplitude.
+            test_filter.input(-TEST_AMPLITUDE);     // Update the filter with the negative amplitude.
         }
         next_sample += sample_period;               // Set the next sample time.
         if (millis() > next_test_phase) {           // If it's time to switch the test signal phase...

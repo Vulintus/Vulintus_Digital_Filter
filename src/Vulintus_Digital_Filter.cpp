@@ -57,7 +57,7 @@ float Vulintus_Digital_Filter::cutoff_frequency(float new_freq)
 
 
 // Update the filter with a new input value.
-float Vulintus_Digital_Filter::update(float new_value)
+float Vulintus_Digital_Filter::input(float new_value)
 {
     uint32_t cur_micros = micros();                     // Grab the current microsecond clock time.
     uint32_t dt = cur_micros - _last_micros;            // Calculate the time since last update.
