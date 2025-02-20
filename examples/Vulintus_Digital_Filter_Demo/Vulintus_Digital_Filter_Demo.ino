@@ -5,7 +5,7 @@
     copyright 2025, Vulintus, Inc.
 
     Example demonstrating the use of the Vulintus_Digital_Filter class. Use the 
-    Arduino Serial Plotter to visual the filter's output on the square-wave test
+    Arduino Serial Plotter to visual the filters' output on the square-wave test
     signal.
 
     UPDATE LOG:
@@ -22,8 +22,8 @@
 
 // Digital filter. //
 const float CUTOFF_FREQ = 1.0;                          // Cutoff frequency of the filter, in Hz
-Vulintus_IIR_LowPass_Filter test_filter(CUTOFF_FREQ);   // Create a low-pass filter.
-// Vulintus_IIR_HighPass_Filter test_filter(CUTOFF_FREQ);  // Create an RC high-pass filter.
+Vulintus_IIR_LowPass_Filter lp_filter(CUTOFF_FREQ);     // Create a low-pass IIR filter.
+Vulintus_IIR_HighPass_Filter hp_filter(CUTOFF_FREQ);    // Create a high-pass IIR filter.
 
 // Sampling timing. //
 const float SAMPLE_FREQ = 1000;         // Sampling frequency, in Hz.
@@ -50,7 +50,8 @@ void setup() {
     Serial.begin(SERIAL_BAUD_RATE);           
 
     // Initialize the digital filter.
-    test_filter.begin();                                // Initialize the filter.
+    lp_filter.begin();                                  // Initialize the low-pass filter.
+    hp_filter.begin();                                  // Initialize the high-pass filter.
 
     // Test signal timing.
     float temp_phase_period = 1e3 / TEST_FREQUENCY;     // Calculate the period of the test signal, in milliseconds.
@@ -77,9 +78,11 @@ void loop() {
   if (micros() > next_sample) {                 // If it's time to sample the test signal...
 
     if (test_phase) {                           // If the test signal is in the positive phase.
-      test_filter.input(TEST_AMPLITUDE);        // Update the filter with the positive amplitude.
+      lp_filter.input(TEST_AMPLITUDE);          // Update the low-pass filter with the positive amplitude.
+      hp_filter.input(TEST_AMPLITUDE);          // Update the high-pass filter with the positive amplitude.
     } else {                                    // If the test signal is in the negative phase.
-      test_filter.input(-TEST_AMPLITUDE);       // Update the filter with the negative amplitude.
+      lp_filter.input(-TEST_AMPLITUDE);         // Update the low-pass filter with the negative amplitude.
+      hp_filter.input(-TEST_AMPLITUDE);         // Update the high-pass filter with the negative amplitude.
     }
     next_sample += sample_period;               // Set the next sample time.
 
@@ -90,9 +93,11 @@ void loop() {
 
     if (millis() > next_print) {                // If it's time to print the filter output...
       Serial.print("RAW:");                     // Raw signal label.         
-      Serial.print(test_filter.X,3);            // Print the most recent filter input.
-      Serial.print(",FILTERED:");               // Filtered signal label.
-      Serial.println(test_filter.output,3);     // Print the filter cutoff frequency.
+      Serial.print(lp_filter.X,3);              // Print the most recent filter input.
+      Serial.print(",LOW-PASS:");               // Low-pass filtered signal label.
+      Serial.print(lp_filter.output,3);         // Print the most recent low-pass filter output.
+    Serial.print(",HIGH-PASS:");                // High-pass filtered signal label.
+    Serial.println(hp_filter.output,3);         // Print the most recent high-pass filter output.
       next_print += print_period;               // Set the next print time.
     }
 
