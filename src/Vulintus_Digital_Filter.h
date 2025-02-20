@@ -57,14 +57,13 @@ class Vulintus_Digital_Filter {
 
 
 // CHILD CLASSES *****************************************************************************************************//
-#include "./Vulintus_IIR_LowPass_Filter.h"    // Single pole IIR low-pass filter.
-#include "./Vulintus_RC_LowPass_Filter.h"     // Simple RC low-pass filter.
-#include "./Vulintus_RC_HighPass_Filter.h"    // Simple RC high-pass filter.
+#include "./IIR Filters/Vulintus_IIR_LowPass_Filter.h"    // Single pole IIR low-pass filter.
+#include "./IIR Filters/Vulintus_IIR_HighPass_Filter.h"   // Single pole IIR high-pass filter.
 
 
 // DEFINITIONS *******************************************************************************************************//
-#define Vulintus_LowPass_Filter Vulintus_IIR_LowPass_Filter     // Use the IIR filter as the default low-pass filter.
-#define Vulintus_HighPass_Filter Vulintus_RC_HighPass_Filter    // Use the simple RC filter as the default high-pass filter.
+#define Vulintus_LowPass_Filter Vulintus_IIR_LowPass_Filter     // Use the single-pole IIR filter as the default low-pass filter.
+#define Vulintus_HighPass_Filter Vulintus_IIR_HighPass_Filter   // Use the single-pole IIR filter as the default high-pass filter.
 
 
 #endif	//#ifndef _VULINTUS_DIGITAL_FILTER_H_

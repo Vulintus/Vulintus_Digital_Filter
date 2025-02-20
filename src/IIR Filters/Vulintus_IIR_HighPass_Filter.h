@@ -1,9 +1,9 @@
 /*  
-    Vulintus_RC_HighPass_Filter.h
+    Vulintus_IIR_HighPass_Filter.h
 
     copyright 2025, Vulintus, Inc.
 
-    Vulintus' simple RC high-pass filter class.
+    Vulintus' Infinite Impulse Response (IIR) high-pass filter class.
 
     UPDATE LOG:
       2025-02-19 - Drew Sloan - File first created, adapted from Jon Driscoll's
@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _VULINTUS_RC_HIGHPASS_FILTER_H_
-#define _VULINTUS_RC_HIGHPASS_FILTER_H_
+#ifndef _VULINTUS_IIR_HIGHPASS_FILTER_H_
+#define _VULINTUS_IIR_HIGHPASS_FILTER_H_
 
 
 #include <Arduino.h>						          // Arduino main include file.
@@ -21,15 +21,15 @@
 
 
 //CLASSES ************************************************************************************************************//
-class Vulintus_RC_HighPass_Filter : public Vulintus_Digital_Filter {
+class Vulintus_IIR_HighPass_Filter : public Vulintus_Digital_Filter {
 
   public:
 
     // Constructor. //
-    Vulintus_RC_HighPass_Filter(float freq, float initial_value = 0);
+    Vulintus_IIR_HighPass_Filter(float freq, float initial_value = 0);
     
     // Destructor. //
-    ~Vulintus_RC_HighPass_Filter(void);
+    ~Vulintus_IIR_HighPass_Filter(void);
 
     // Public Functions. //
     void begin();                                       // Initialization.
@@ -46,4 +46,4 @@ class Vulintus_RC_HighPass_Filter : public Vulintus_Digital_Filter {
 
 };
 
-#endif	//#ifndef _VULINTUS_RC_HIGHPASS_FILTER_H_
+#endif	//#ifndef _VULINTUS_IIR_HIGHPASS_FILTER_H_

@@ -20,9 +20,8 @@
 
 // Digital filter. //
 const float CUTOFF_FREQ = 1.0;                          // Cutoff frequency of the filter, in Hz
-// Vulintus_IIR_LowPass_Filter test_filter(CUTOFF_FREQ);   // Creae a low-pass filter.
-// Vulintus_RC_LowPass_Filter test_filter(CUTOFF_FREQ);    // Create an RC low-pass filter.
-Vulintus_RC_HighPass_Filter test_filter(CUTOFF_FREQ);   // Create an RC high-pass filter.
+Vulintus_IIR_LowPass_Filter test_filter(CUTOFF_FREQ);   // Create a low-pass filter.
+// Vulintus_IIR_HighPass_Filter test_filter(CUTOFF_FREQ);  // Create an RC high-pass filter.
 
 // Sampling and print timing. //
 const float SAMPLE_FREQ = 1000;         // Sampling frequency, in Hz.

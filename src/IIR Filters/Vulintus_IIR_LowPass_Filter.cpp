@@ -57,20 +57,32 @@ float Vulintus_IIR_LowPass_Filter::input(float new_value, uint32_t read_time)
     _prev_output = output;                                  // Shift the current output value to the previous.
     X = new_value;                                          // Update the input value.
 
-    // For IIR filters, we'll first calculate the smoothing 
-    // factor, α, which is given by:
+    // For IIR low-pass filters, we'll calculate the new output value from the 
+    // recurrence relation:
+    //        
+    // y[i] = (1 - α) * x[i] + α * y[i-1].
     //
-    // α = Δt / (τ + Δt)
+    // The factor, α, is given by:
     //
-    // where τ is the decay constant. Then we'll calculate the new output value
-    // from the recurrence relation, which is given by:
+    // α = 1 - e^(-Δt/τ)
     //
-    // y[i] = α * x[i] + (1 - α) * y[i-1].
+    // where Δt is the time between samples and τ is the decay constant. 
+    // However, calls to the exp() function can be computationally expensive. So 
+    // long as Δt is small compared to τ, we can quickly approximate α like so:
     //
-    // https://en.wikipedia.org/wiki/Low-pass_filter#Simple_infinite_impulse_response_filter
+    // α = τ / (τ + Δt)
+    //
+    // https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling
 
-    float alpha = delta_t / (_tau_micros + delta_t);
-    output = alpha * X + (1.0 - alpha) * _prev_output;
+    float alpha;                                            // Declare the alpha factor.             
+    float tau_dt_ratio = _tau_micros / delta_t;             // Calculate the ratio of τ to Δt.
+    if (tau_dt_ratio > 7) {                                 // If the ratio is greater than 7...
+        alpha = _tau_micros / (_tau_micros + delta_t);      // Use the τ / (τ + Δt) approximation (error will be < 1%).
+    }
+    else {                                                  // Otherwise, for longer Δt...                       
+        alpha = exp(-delta_t / _tau_micros);                // Use the e^(-Δt/τ) calculation.
+    }
+    output = (1 - alpha) * X + alpha * _prev_output;        // Calculate the new output value.
 
     return output;                                          // Return the current output value.
 }      
