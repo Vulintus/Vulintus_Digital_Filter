@@ -4,7 +4,9 @@
 
     copyright 2025, Vulintus, Inc.
 
-    Example demonstrating the use of the Vulintus_Digital_Filter class.
+    Example demonstrating the use of the Vulintus_Digital_Filter class. Use the 
+    Arduino Serial Plotter to visual the filter's output on the square-wave test
+    signal.
 
     UPDATE LOG:
       2025-02-19 - Drew Sloan - Example first created.
@@ -23,13 +25,17 @@ const float CUTOFF_FREQ = 1.0;                          // Cutoff frequency of t
 Vulintus_IIR_LowPass_Filter test_filter(CUTOFF_FREQ);   // Create a low-pass filter.
 // Vulintus_IIR_HighPass_Filter test_filter(CUTOFF_FREQ);  // Create an RC high-pass filter.
 
-// Sampling and print timing. //
+// Sampling timing. //
 const float SAMPLE_FREQ = 1000;         // Sampling frequency, in Hz.
 uint32_t sample_period;                 // Sampling period, in microseconds.
 uint32_t next_sample;                   // Sampling timer.
+
+// Serial print timing. //
 const float PRINT_FREQ = 15;            // Print frequency, in Hz.
 uint32_t print_period;                  // Print period, in microseconds.
 uint32_t next_print;                    // Print timer.
+
+// Test signal parameters. //
 const float TEST_FREQUENCY = 1;         // Frequency of the square-wave test signal, in Hz.
 const float TEST_AMPLITUDE = 1.0;       // Amplitude of the square-wave test signal.
 uint32_t test_phase_period;             // Test phase period, in microseconds.
@@ -60,17 +66,6 @@ void setup() {
     float temp_sample_period = 1e6 / SAMPLE_FREQ;       // Calculate the sampling period, in microseconds.
     sample_period = (uint32_t)temp_sample_period;       // Convert the sampling period to an integer.
     next_sample = micros() + sample_period;             // Set the first sampling time.
-
-    // while (1) {
-    //   Serial.print("test_phase_period = ");
-    //   Serial.println(test_phase_period);
-    //   Serial.print("print_period = ");
-    //   Serial.println(print_period);
-    //   Serial.print("sample_period = ");
-    //   Serial.println(sample_period);
-    //   Serial.println();
-    //   delay(1000);
-    // }
 
 }
 

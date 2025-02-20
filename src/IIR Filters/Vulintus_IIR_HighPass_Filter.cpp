@@ -72,12 +72,16 @@ float Vulintus_IIR_HighPass_Filter::input(float new_value, uint32_t read_time)
     // long as Δt is small compared to τ, we can quickly approximate α like so:
     //
     // α = τ / (τ + Δt)
-    //   
+    // 
+    // The error difference between the exponential calculation and the 
+    // approximation is less than 1% for τ/Δt > 7 and less than 0.1% for 
+    // τ/Δt > 22.
+    //
     // https://en.wikipedia.org/wiki/High-pass_filter#Discrete-time_realization
 
     float alpha;                                            // Declare the alpha factor.             
-    float tau_dt_ratio = _tau_micros / delta_t;             // Calculate the ratio of τ to Δt.
-    if (tau_dt_ratio > 7) {                                 // If the ratio is greater than 7...
+    float tau_dt_ratio = _tau_micros / delta_t;             // Calculate ratio τ/Δt.
+    if (tau_dt_ratio > 7) {                                 // If τ/Δt is greater than 7...
         alpha = _tau_micros / (_tau_micros + delta_t);      // Use the τ / (τ + Δt) approximation (error will be < 1%).
     }
     else {                                                  // Otherwise, for longer Δt...                       
