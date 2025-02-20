@@ -1,6 +1,6 @@
 # Vulintus_Digital_Filter
 
-A collection of Arduino-compatible digital filter classes used in Vulintus devices' firmware. This library started as a stripped-down fork of Jon Driscoll's "Filters" library, but now differs somewhat in the calculations based on our own interpretations. Basic examples for Arduino are included. This library is, as always, a work-in-progress.
+A collection of Arduino-compatible digital filter classes used in Vulintus devices' firmware. This library started as a stripped-down fork of Jon Driscoll's "Filters" library, but now differs somewhat in the calculations based on our own interpretations. Basic [examples](examples/) for Arduino are included. This library is, as always, a work-in-progress.
 
 ---
 
