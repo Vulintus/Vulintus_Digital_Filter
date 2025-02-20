@@ -1,16 +1,16 @@
-/*  Vulintus_Digital_Filter.h
+/*  
+    Vulintus_Digital_Filter.h
 
     copyright 2025, Vulintus, Inc.
 
     A collection of digital filter classes used in Vulintus devices' firmware.
-    This library is largely a stripped-down derivation of Jon Driscoll's 
-    "Filters" library that doesn't include as much testing and verification
-    functionality.
-    Single pole digital filter class commonly used in Vulintus firmware.
+    This library started as a stripped-down fork of Jon Driscoll's "Filters" 
+    library, but has since grown to include a variety of digital filters used by
+    Vulintus.
 
     UPDATE LOG:
-      2025-02-18 - Drew Sloan - File first created, adapted from Jon Driscoll's
-                                "FilterOnePole" library.
+      2025-02-18 - Drew Sloan - Library first created, adapted from Jon 
+                                Driscoll's "Filters" library.                                
 
 */
 
@@ -20,55 +20,51 @@
 #include <Arduino.h>						// Arduino main include file.
 
 
-// DEFINITIONS *******************************************************************************************************//
-
-// Filter types. //
-enum Vulintus_Filter_Type : uint8_t {
-  SINGLE_POLE_HIGHPASS = 0x00,   // Single-pole high-pass filter.
-  SINGLE_POLE_LOWPASS = 0x01,    // Single-pole low-pass filter.
-  INTEGRATOR = 0x02,             // Trapezoidal integrator.
-  DIFFERENTIATOR = 0x03,         // Difference quotient differentiator.
-};
-
-#define HIGHPASS SINGLE_POLE_HIGHPASS   // Set "HIGHPASS" as shorthand for "SINGLE_POLE_HIGHPASS".
-#define LOWPASS SINGLE_POLE_LOWPASS     // Set "LOWPASS" as shorthand for "SINGLE_POLE_LOWPASS".
-
-
 //CLASSES ************************************************************************************************************//
 class Vulintus_Digital_Filter {
 
   public:
 
       // Constructor. //
-      Vulintus_Digital_Filter(Vulintus_Filter_Type filter_type = SINGLE_POLE_HIGHPASS, \
-          float freq = 1.0, float initial_value = 0);
+      Vulintus_Digital_Filter(void);
       
       // Destructor. //
-      ~Vulintus_Digital_Filter();
+      ~Vulintus_Digital_Filter(void);
       
       // Public Variables. //
-      float last_input;                       // Last input value.
+      float X;                                // Last input value.
+      float output;                           // Current output value.
 
       // Public Functions. //
-      void begin();                           // Initialization.
+      virtual void begin();                   // Initialization.
 
-      float cutoff_frequency(void);           // Get the cutoff frequency of the filter.
-      float cutoff_frequency(float new_freq); // Set the cutoff frequency of the filter.
+      // Set/get the cutoff frequency of the filter.
+      float cutoff_frequency(void);
+      float cutoff_frequency(float new_freq);
       
-      float input(float new_value);                     // Update the filter with a new input value, using the current micros() time.
-      float input(float new_value, uint32_t read_time); // Update the filter with a new input value, using the specified micros() time.
-      float output(void);                               // Return the current output value of the filter.
-      
+      // Update the filter with a new input value.
+      virtual float input(float new_value);                       // No specified read time.
+      virtual float input(float new_value, uint32_t read_time);   // Specified read time.
 
-  private:
+  protected:
 
       // Private Variables. //
-      Vulintus_Filter_Type _filter_type;      // Single-pole filter type.
       float _cutoff_freq;                     // Cutoff frequency of the filter.
-      float _Y[2];                            // Current and previos output value.
       float _tau_micros;                      // Decay constant of the filter, in microseconds.
       uint32_t _last_micros;                  // Time of last update, in microseconds.
 
 };
+
+
+// CHILD CLASSES *****************************************************************************************************//
+#include "./Vulintus_IIR_LowPass_Filter.h"    // Single pole IIR low-pass filter.
+#include "./Vulintus_RC_LowPass_Filter.h"     // Simple RC low-pass filter.
+#include "./Vulintus_RC_HighPass_Filter.h"    // Simple RC high-pass filter.
+
+
+// DEFINITIONS *******************************************************************************************************//
+#define Vulintus_LowPass_Filter Vulintus_IIR_LowPass_Filter     // Use the IIR filter as the default low-pass filter.
+#define Vulintus_HighPass_Filter Vulintus_RC_HighPass_Filter    // Use the simple RC filter as the default high-pass filter.
+
 
 #endif	//#ifndef _VULINTUS_DIGITAL_FILTER_H_

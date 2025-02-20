@@ -4,6 +4,15 @@ Arduino-compatible digital filter library used in Vulintus devices' firmware.
 
 ---
 
+## Simple Infinite Response Filters
+
+The simple low- and high-pass filters are designed as [discretized RC filters](https://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization).
+𝜏 = RC
+
+y_i = x_i * ( dt / ( RC + dt ) ) + y_i-1 * ( RC / ( RC + dt ) )
+y_i = α * x_i + ( 1 - α ) * y_i-1
+α = dt / ( RC + dt ) = dt / ( 𝜏 + dt )
+
 ## Two-Pole Filters
 
 The driven, damped [harmonic oscillator](http://en.wikipedia.org/wiki/Harmonic_oscillator) equation is:
