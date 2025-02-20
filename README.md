@@ -6,7 +6,7 @@ A collection of Arduino-compatible digital filter classes used in Vulintus devic
 
 ## Simple Infinite Impulse Response (IIR) Filters
 
-The most basic low- and high-pass filters, [Vulintus_IIR_LowPass_Filter](src/IIR Filters/Vulintus_IIR_LowPass_Filter.h) and "[Vulintus_IIR_HighPass_Filter](src/IIR Filters/Vulintus_IIR_HighPass_Filter.h)", respectively, are designed as single-pole discretized RC filters. The implementation of these filters is adapted largely from the Wikipedia pages for [low-pass](https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling) and [high-pass](https://en.wikipedia.org/wiki/High-pass_filter#Discrete-time_realization) filters.
+The most basic low- and high-pass filters, "[Vulintus_IIR_LowPass%20Filter](src/IIR Filters/Vulintus_IIR_LowPass_Filter.h)" and "[Vulintus_IIR_HighPass_Filter](src/IIR%20Filters/Vulintus_IIR_HighPass_Filter.h)", respectively, are designed as single-pole discretized RC filters. The implementation of these filters is adapted largely from the Wikipedia pages for [low-pass](https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling) and [high-pass](https://en.wikipedia.org/wiki/High-pass_filter#Discrete-time_realization) filters.
 
 For IIR high-pass filters, we'll calculate new output values for the filter from the recurrence relation, which is derived from a basic RC circuit model for a low-pass filter:
 
