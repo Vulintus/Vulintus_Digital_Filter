@@ -21,9 +21,9 @@
 #define SERIAL_BAUD_RATE  115200            // Serial baud rate.
 
 // Digital filter. //
-const float CUTOFF_FREQ = 1.0;                          // Cutoff frequency of the filter, in Hz
-Vulintus_IIR_LowPass_Filter lp_filter(CUTOFF_FREQ);     // Create a low-pass IIR filter.
-Vulintus_IIR_HighPass_Filter hp_filter(CUTOFF_FREQ);    // Create a high-pass IIR filter.
+const float CUTOFF_FREQ = 1.0;                      // Cutoff frequency of the filter, in Hz
+Vulintus_LowPass_Filter lp_filter(CUTOFF_FREQ);     // Create a low-pass IIR filter.
+Vulintus_HighPass_Filter hp_filter(CUTOFF_FREQ);    // Create a high-pass IIR filter.
 
 // Sampling timing. //
 const float SAMPLE_FREQ = 1000;         // Sampling frequency, in Hz.

@@ -1,21 +1,22 @@
 /*  
 
-  Vulintus_IIR_LowPass_Filter.cpp
+  Vulintus_IIR_Filter.cpp
   
   copyright 2025, Vulintus, Inc.
 
-  See "Vulintus_IIR_LowPass_Filter.h" for documentation and change log.
+  See "Vulintus_IIR_Filter.h" for documentation and change log.
 
 */
 
-#include "./Vulintus_IIR_LowPass_Filter.h"     // Library header.
+#include "./Vulintus_IIR_Filter.h"     // Library header.
 
 
 // CLASS PUBLIC FUNCTIONS ****************************************************// 
 
 // Constructor. //
-Vulintus_IIR_LowPass_Filter::Vulintus_IIR_LowPass_Filter(float freq, float initial_value)
+Vulintus_IIR_Filter::Vulintus_IIR_Filter(Vulintus_Filter_Type ftype, float freq, float initial_value)
 {
+    filter_type = ftype;                // Set the filter type.
     _cutoff_freq = freq;                // Set the cutoff frequency.
     X = initial_value;                  // Set the initial input value.
     output = initial_value;             // Set the initial output value.
@@ -24,14 +25,14 @@ Vulintus_IIR_LowPass_Filter::Vulintus_IIR_LowPass_Filter(float freq, float initi
 
 
 // Destructor. //
-Vulintus_IIR_LowPass_Filter::~Vulintus_IIR_LowPass_Filter(void)
+Vulintus_IIR_Filter::~Vulintus_IIR_Filter(void)
 {
 
 }
 
 
 // Initialization.
-void Vulintus_IIR_LowPass_Filter::begin(void)
+void Vulintus_IIR_Filter::begin(void)
 {
     cutoff_frequency(_cutoff_freq);     // Calculate the decay constant, in microseconds.
     _last_micros = micros();            // Fetch the first update time.
@@ -39,7 +40,7 @@ void Vulintus_IIR_LowPass_Filter::begin(void)
 
 
 // Update the filter with a new input value (no specified read time).
-float Vulintus_IIR_LowPass_Filter::input(float new_value)
+float Vulintus_IIR_Filter::input(float new_value)
 {
     uint32_t read_time = micros();          // Grab the current microsecond clock time.
     return input(new_value, read_time);     // Pass the current microsecond clock time as the read time.
@@ -47,20 +48,28 @@ float Vulintus_IIR_LowPass_Filter::input(float new_value)
 
 
 // Update the filter with a new input value (specified read time).
-float Vulintus_IIR_LowPass_Filter::input(float new_value, uint32_t read_time)
+float Vulintus_IIR_Filter::input(float new_value, uint32_t read_time)
 {
     // We'll first calculate the time since the time separation between samples:
     // Δt = t[i] - t[i-1]
     float delta_t = read_time - _last_micros;               // Calculate the time since last update.
     _last_micros = read_time;                               // Update the last update time.
-
+    
+    _prev_input = X;                                        // Shift the current input value to the previous.
     _prev_output = output;                                  // Shift the current output value to the previous.
     X = new_value;                                          // Update the input value.
+
+    if (filter_type == NO_FILTER) {                         // If the filter is disabled...
+        output = X;                                         // The output is the input.
+        return output;                                      // Return the current output value.
+    }
 
     // For IIR low-pass filters, we'll calculate the new output value from the 
     // recurrence relation:
     //        
-    // y[i] = (1 - α) * x[i] + α * y[i-1].
+    // y[i] = (1 - α) * x[i] + α * y[i-1]           (low-pass)
+    //
+    // y[i] = α * (x[i] - x[i-1]) + α * y[i-1]      (high-pass)
     //
     // The factor, α, is given by:
     //
@@ -75,8 +84,6 @@ float Vulintus_IIR_LowPass_Filter::input(float new_value, uint32_t read_time)
     // The error difference between the exponential calculation and the 
     // approximation is less than 1% for τ/Δt > 7 and less than 0.1% for 
     // τ/Δt > 22.
-    //
-    // https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling
 
     float alpha;                                            // Declare the alpha factor.             
     float tau_dt_ratio = _tau_micros / delta_t;             // Calculate ratio τ/Δt.
@@ -86,7 +93,13 @@ float Vulintus_IIR_LowPass_Filter::input(float new_value, uint32_t read_time)
     else {                                                  // Otherwise, for longer Δt...                       
         alpha = exp(-delta_t / _tau_micros);                // Use the e^(-Δt/τ) calculation.
     }
-    output = (1 - alpha) * X + alpha * _prev_output;        // Calculate the new output value.
+
+    if (filter_type == LOWPASS) {                                   // If the filter is a low-pass filter...
+        output = (1 - alpha) * X + alpha * _prev_output;            // Calculate the new output value.
+    }
+    else {                                                          // Otherwise, if the filter is a high-pass filter...
+        output = alpha * (X - _prev_input) + alpha * _prev_output;  // Calculate the new output value.
+    }
 
     return output;                                          // Return the current output value.
 }      

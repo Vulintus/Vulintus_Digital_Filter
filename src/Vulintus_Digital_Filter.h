@@ -20,6 +20,18 @@
 #include <Arduino.h>						// Arduino main include file.
 
 
+// DEFINITIONS *******************************************************************************************************//
+
+enum Vulintus_Filter_Type : uint8_t {
+  NO_FILTER = 0x00,      // No filter, filter is disabled.
+  LOWPASS = 0x01,        // Low-pass filter.
+  HIGHPASS = 0x02,       // High-pass filter.
+};
+
+#define Vulintus_LowPass_Filter Vulintus_IIR_LowPass_Filter     // Use the single-pole IIR filter as the default low-pass filter.
+#define Vulintus_HighPass_Filter Vulintus_IIR_HighPass_Filter   // Use the single-pole IIR filter as the default high-pass filter.
+
+
 //CLASSES ************************************************************************************************************//
 class Vulintus_Digital_Filter {
 
@@ -32,11 +44,12 @@ class Vulintus_Digital_Filter {
       ~Vulintus_Digital_Filter(void);
       
       // Public Variables. //
-      float X;                                // Last input value.
-      float output;                           // Current output value.
+      Vulintus_Filter_Type filter_type = LOWPASS;   // Filter type, low pass by default.
+      float X;                                      // Last input value.
+      float output;                                 // Current output value.
 
       // Public Functions. //
-      virtual void begin();                   // Initialization.
+      virtual void begin();                         // Initialization.
 
       // Set/get the cutoff frequency of the filter.
       float cutoff_frequency(void);
@@ -57,13 +70,7 @@ class Vulintus_Digital_Filter {
 
 
 // CHILD CLASSES *****************************************************************************************************//
-#include "./IIR Filters/Vulintus_IIR_LowPass_Filter.h"    // Single pole IIR low-pass filter.
-#include "./IIR Filters/Vulintus_IIR_HighPass_Filter.h"   // Single pole IIR high-pass filter.
-
-
-// DEFINITIONS *******************************************************************************************************//
-#define Vulintus_LowPass_Filter Vulintus_IIR_LowPass_Filter     // Use the single-pole IIR filter as the default low-pass filter.
-#define Vulintus_HighPass_Filter Vulintus_IIR_HighPass_Filter   // Use the single-pole IIR filter as the default high-pass filter.
+#include "./IIR Filters/Vulintus_IIR_Filter.h"    // Single pole IIR filters.
 
 
 #endif	//#ifndef _VULINTUS_DIGITAL_FILTER_H_

@@ -6,17 +6,15 @@ A collection of Arduino-compatible digital filter classes used in Vulintus devic
 
 ## Simple Infinite Impulse Response (IIR) Filters
 
-The most basic low- and high-pass filters, "[Vulintus_IIR_LowPass_Filter](src/IIR%20Filters/Vulintus_IIR_LowPass_Filter.h)" and "[Vulintus_IIR_HighPass_Filter](src/IIR%20Filters/Vulintus_IIR_HighPass_Filter.h)", respectively, are designed as single-pole discretized RC filters. The implementation of these filters is adapted largely from the Wikipedia pages for [low-pass](https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling) and [high-pass](https://en.wikipedia.org/wiki/High-pass_filter#Discrete-time_realization) filters.
+The most basic low- or high-pass filters, "[Vulintus_IIR_Filter](src/IIR%20Filters/Vulintus_IIR_Filter.h)," are designed as single-pole discretized RC filters. The implementation of these filters is adapted largely from the Wikipedia pages for [low-pass](https://en.wikipedia.org/wiki/Low-pass_filter#Difference_equation_through_discrete_time_sampling) and [high-pass](https://en.wikipedia.org/wiki/High-pass_filter#Discrete-time_realization) filters.
 
-For IIR high-pass filters, we'll calculate new output values for the filter from the recurrence relation, which is derived from a basic RC circuit model for a low-pass filter:
+For IIR filters, we'll calculate new output values for the filter from the recurrence relation, which is derived from basic RC circuit models for low-pass and high-pass filters:
 
-   y\[i\] = (1 - α) * x\[i\] + α * y\[i-1\].
+   y\[i\] = (1 - α) * x\[i\] + α * y\[i-1\]           (low-pass)
 
-The calculations for an IIR high-pass filter is similar to the low-pass case, but the RC circuit model for a high-pass filter flips the position of the capacitor and resistor, so that the recurrence relation works out to:
+   y\[i\] = α * (x\[i\] - x\[i-1\]) + α * y\[i-1\]    (high-pass)
 
-   y\[i\] = α * (x\[i\] - x\[i-1\]) + α * y\[i-1\]
-
-For both equations, x\[i\] and x\[i-1\] are the current and previous raw signal samples, and y\[1\] and y\[i-1\] are the current and previous filter output values. The factor, α, for both equations is given by:
+These equations differ because the RC circuit models for low-pass and high-pass filters differ by flipping the position of the capacitor and resistor. For both equations, x\[i\] and x\[i-1\] are the current and previous raw signal samples, and y\[1\] and y\[i-1\] are the current and previous filter output values. The factor, α, for both equations, is given by:
 
    α = e^(-Δt/τ)
 
