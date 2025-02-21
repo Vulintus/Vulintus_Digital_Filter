@@ -71,7 +71,7 @@ class Vulintus_Digital_Filter {
 
 
 // CHILD CLASSES *****************************************************************************************************//
-#include "./IIR Filters/Vulintus_IIR_Filter.h"    // Single pole IIR filters.
+#include "./IIR_Filters/Vulintus_IIR_Filter.h"    // Single pole IIR_Filters.
 
 
 #endif	//#ifndef _VULINTUS_DIGITAL_FILTER_H_
