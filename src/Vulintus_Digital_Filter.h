@@ -49,7 +49,9 @@ class Vulintus_Digital_Filter {
       float output;                                 // Current output value.
 
       // Public Functions. //
-      virtual void begin();                         // Initialization.
+      // ** NOTE ** : The filters don't need an initialization function because 
+      // they have no hardware components that would require a delay before
+      // initialization. All filter setup can occur in the constructor.
 
       // Set/get the cutoff frequency of the filter.
       float cutoff_frequency(void);
@@ -62,7 +64,6 @@ class Vulintus_Digital_Filter {
   protected:
 
       // Private Variables. //
-      float _cutoff_freq;                     // Cutoff frequency of the filter.
       float _tau_micros;                      // Decay constant of the filter, in microseconds.
       uint32_t _last_micros;                  // Time of last update, in microseconds.
 

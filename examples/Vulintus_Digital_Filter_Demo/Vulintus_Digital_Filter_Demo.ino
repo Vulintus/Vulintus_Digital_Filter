@@ -49,9 +49,9 @@ void setup() {
     // Initialize serial data transmission.
     Serial.begin(SERIAL_BAUD_RATE);           
 
-    // Initialize the digital filter.
-    lp_filter.begin();                                  // Initialize the low-pass filter.
-    hp_filter.begin();                                  // Initialize the high-pass filter.
+    // ** NOTE ** : The filters don't need an initialization function because 
+    // they have no hardware components that need a delay before initialization.
+    // All filter setup can occur in the constructor.
 
     // Test signal timing.
     float temp_phase_period = 1e3 / TEST_FREQUENCY;     // Calculate the period of the test signal, in milliseconds.

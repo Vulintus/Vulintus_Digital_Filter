@@ -27,17 +27,12 @@ Vulintus_Digital_Filter::~Vulintus_Digital_Filter(void)
 }
 
 
-// Initialization.
-void Vulintus_Digital_Filter::begin(void)
-{
-
-}
-
-
 // Get the cutoff frequency of the filter.
 float Vulintus_Digital_Filter::cutoff_frequency(void)
 {
-    return _cutoff_freq;                        // Return the cutoff frequency.
+    float tau = _tau_micros * 1e-6;             // Convert the decay constant to seconds.
+    float cutoff_freq = 1.0 / (2.0 * PI * tau); // Calculate the cutoff frequency.
+    return cutoff_freq;                         // Return the cutoff frequency.
 }
 
 
@@ -50,10 +45,9 @@ float Vulintus_Digital_Filter::cutoff_frequency(float new_freq)
     // 1/e of its original value. Solving the previous equation for τ, we get:
     // τ = 1 / (2πf_c).
     
-    _cutoff_freq = new_freq;                    // Set the new cutoff frequency.
     _tau_micros = 1.0 / (2.0 * PI * new_freq);  // Set the decay constant, τ = 1/ω, in seconds.
     _tau_micros *= 1e6;                         // Convert the decay constant to microseconds.
-    return _cutoff_freq;                        // Return the cutoff frequency.
+    return new_freq;                            // Return the cutoff frequency.
 }
 
 

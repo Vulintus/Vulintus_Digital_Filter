@@ -17,10 +17,11 @@
 Vulintus_IIR_Filter::Vulintus_IIR_Filter(Vulintus_Filter_Type ftype, float freq, float initial_value)
 {
     filter_type = ftype;                // Set the filter type.
-    _cutoff_freq = freq;                // Set the cutoff frequency.
+    cutoff_frequency(freq);             // Calculate the decay constant, in microseconds.
     X = initial_value;                  // Set the initial input value.
     output = initial_value;             // Set the initial output value.
     _prev_output = initial_value;       // Set the previous output value.
+    _last_micros = micros();            // Fetch the first update time.
 }
 
 
@@ -28,14 +29,6 @@ Vulintus_IIR_Filter::Vulintus_IIR_Filter(Vulintus_Filter_Type ftype, float freq,
 Vulintus_IIR_Filter::~Vulintus_IIR_Filter(void)
 {
 
-}
-
-
-// Initialization.
-void Vulintus_IIR_Filter::begin(void)
-{
-    cutoff_frequency(_cutoff_freq);     // Calculate the decay constant, in microseconds.
-    _last_micros = micros();            // Fetch the first update time.
 }
 
 

@@ -32,8 +32,7 @@ class Vulintus_IIR_Filter : public Vulintus_Digital_Filter {
     ~Vulintus_IIR_Filter(void);
 
     // Public Functions. //
-    void begin();                                       // Initialization.
-    
+
     // Update the filter with a new input value.
     float input(float new_value);                       // No specified read time.
     float input(float new_value, uint32_t read_time);   // Specified read time.
