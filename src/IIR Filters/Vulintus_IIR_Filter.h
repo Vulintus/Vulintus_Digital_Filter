@@ -17,7 +17,7 @@
 
 #include <Arduino.h>						          // Arduino main include file.
 
-#include "./Vulintus_Digital_Filter.h"    // Vulintus digital filter base class.
+#include "../Vulintus_Digital_Filter.h"   // Vulintus digital filter base class.
 
 
 //CLASSES ************************************************************************************************************//
