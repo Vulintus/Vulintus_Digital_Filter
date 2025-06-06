@@ -43,7 +43,7 @@ float Vulintus_IIR_Filter::input(float new_value)
 // Update the filter with a new input value (specified read time).
 float Vulintus_IIR_Filter::input(float new_value, uint32_t read_time)
 {
-    // We'll first calculate the time since the time separation between samples:
+    // We'll first calculate the time between samples:
     // Δt = t[i] - t[i-1]
     float delta_t = read_time - _last_micros;               // Calculate the time since last update.
     _last_micros = read_time;                               // Update the last update time.

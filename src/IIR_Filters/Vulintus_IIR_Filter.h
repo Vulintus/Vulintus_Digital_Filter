@@ -4,7 +4,7 @@
 
   copyright 2025, Vulintus, Inc.
 
-  Vulintus' Infinite Impulse Response (IIR) low-pass filter class.
+  Vulintus' Infinite Impulse Response (IIR) filter class.
 
   UPDATE LOG:
     2025-02-19 - Drew Sloan - File first created, adapted from Jon Driscoll's
