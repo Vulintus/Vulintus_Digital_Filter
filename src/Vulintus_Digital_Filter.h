@@ -45,7 +45,7 @@ class Vulintus_Digital_Filter {
       
       // Public Variables. //
       Vulintus_Filter_Type filter_type = LOWPASS;   // Filter type, low pass by default.
-      float X;                                      // Last input value.
+      float pX;                                     // Last input value.
       float output;                                 // Current output value.
 
       // Public Functions. //

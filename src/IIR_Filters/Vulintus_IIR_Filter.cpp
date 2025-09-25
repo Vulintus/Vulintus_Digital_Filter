@@ -18,7 +18,7 @@ Vulintus_IIR_Filter::Vulintus_IIR_Filter(Vulintus_Filter_Type ftype, float freq,
 {
     filter_type = ftype;                // Set the filter type.
     cutoff_frequency(freq);             // Calculate the decay constant, in microseconds.
-    X = initial_value;                  // Set the initial input value.
+    pX = initial_value;                  // Set the initial input value.
     output = initial_value;             // Set the initial output value.
     _prev_output = initial_value;       // Set the previous output value.
     _last_micros = micros();            // Fetch the first update time.
@@ -48,12 +48,12 @@ float Vulintus_IIR_Filter::input(float new_value, uint32_t read_time)
     float delta_t = read_time - _last_micros;               // Calculate the time since last update.
     _last_micros = read_time;                               // Update the last update time.
     
-    _prev_input = X;                                        // Shift the current input value to the previous.
+    _prev_input = pX;                                        // Shift the current input value to the previous.
     _prev_output = output;                                  // Shift the current output value to the previous.
-    X = new_value;                                          // Update the input value.
+    pX = new_value;                                          // Update the input value.
 
     if (filter_type == NO_FILTER) {                         // If the filter is disabled...
-        output = X;                                         // The output is the input.
+        output = pX;                                         // The output is the input.
         return output;                                      // Return the current output value.
     }
 
@@ -88,10 +88,10 @@ float Vulintus_IIR_Filter::input(float new_value, uint32_t read_time)
     }
 
     if (filter_type == LOWPASS) {                                   // If the filter is a low-pass filter...
-        output = (1 - alpha) * X + alpha * _prev_output;            // Calculate the new output value.
+        output = (1 - alpha) * pX + alpha * _prev_output;           // Calculate the new output value.
     }
     else {                                                          // Otherwise, if the filter is a high-pass filter...
-        output = alpha * (X - _prev_input) + alpha * _prev_output;  // Calculate the new output value.
+        output = alpha * (pX - _prev_input) + alpha * _prev_output; // Calculate the new output value.
     }
 
     return output;                                          // Return the current output value.
