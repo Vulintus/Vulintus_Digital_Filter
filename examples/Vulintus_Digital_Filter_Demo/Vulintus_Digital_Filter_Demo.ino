@@ -93,11 +93,11 @@ void loop() {
 
     if (millis() > next_print) {                // If it's time to print the filter output...
       Serial.print("RAW:");                     // Raw signal label.         
-      Serial.print(lp_filter.X,3);              // Print the most recent filter input.
+      Serial.print(lp_filter.pX,3);             // Print the most recent filter input.
       Serial.print(",LOW-PASS:");               // Low-pass filtered signal label.
       Serial.print(lp_filter.output,3);         // Print the most recent low-pass filter output.
-    Serial.print(",HIGH-PASS:");                // High-pass filtered signal label.
-    Serial.println(hp_filter.output,3);         // Print the most recent high-pass filter output.
+      Serial.print(",HIGH-PASS:");              // High-pass filtered signal label.
+      Serial.println(hp_filter.output,3);       // Print the most recent high-pass filter output.
       next_print += print_period;               // Set the next print time.
     }
 
